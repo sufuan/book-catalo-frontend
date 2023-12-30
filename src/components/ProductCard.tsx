@@ -8,6 +8,7 @@ interface IProps {
 }
 
 export default function ProductCard({ product }: IProps) {
+  console.log(product);
   const viewDetails = (product: IProduct) => {
     <Link to={`/product-details/${product._id}`} className="w-full"></Link>;
   };
@@ -17,12 +18,6 @@ export default function ProductCard({ product }: IProps) {
         <Link to={`/product-details/${product._id}`} className="w-full">
           <img src={product?.img} alt="product" />
           <h1 className="text-xl font-semibold">{product?.title}</h1>
-
-          <p>Rating: {product?.rating}</p>
-          <p className="text-sm">
-            Availability: {product?.status ? 'In stock' : 'Out of stock'}
-          </p>
-          <p className="text-sm">Price: {product?.price}</p>
         </Link>
       </div>
     </div>

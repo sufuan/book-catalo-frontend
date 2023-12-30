@@ -20,9 +20,7 @@ const UpdateBook = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast({
-        description: 'Book creation successful',
-      });
+      alert('Book Updated Successfully');
     }
 
     if (isError) {

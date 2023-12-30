@@ -5,31 +5,45 @@ import { useCreateReviewMutation } from '@/redux/api/apiSlice';
 const Bookreview = ({ bookId }) => {
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleRatingChange = (selectedRating) => {
     setRating(selectedRating);
   };
 
-  const [createReview, { data, isLoading, error, isSuccess }] =
+  const [createReview, { isLoading, error, isSuccess }] =
     useCreateReviewMutation();
 
-  const handleSubmit = () => {
-    // Perform submission logic with review text and rating
-    const formData = {
-      bookId: bookId,
-      rating: review,
-      reviewText: rating,
-    };
-    createReview(formData);
+  const handleSubmit = async () => {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
 
-    // Reset the form after submission
-    setReview('');
-    setRating(0);
+    try {
+      setIsSubmitting(true);
+
+      // Perform submission logic with review text and rating
+      const formData = {
+        bookId: bookId,
+        rating: rating,
+        reviewText: review,
+      };
+
+      // Make the API call
+      await createReview(formData);
+
+      // Reset the form after successful submission
+      setReview('');
+      setRating(0);
+    } catch (error) {
+      // Handle submission error if needed
+      console.error('Error submitting review:', error);
+    } finally {
+      // Reset the submission state after completion
+      setIsSubmitting(false);
+    }
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="max-w-md mx-auto p-4">
@@ -54,10 +68,29 @@ const Bookreview = ({ bookId }) => {
       {/* Submit Button */}
       <button
         onClick={handleSubmit}
-        className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+        className={`${
+          isLoading || isSubmitting
+            ? 'bg-gray-500 cursor-not-allowed'
+            : 'bg-blue-500'
+        } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-800`}
+        disabled={isLoading || isSubmitting}
       >
-        Submit Review
+        {isSubmitting ? 'Submitting...' : 'Submit Review'}
       </button>
+
+      {/* Display error message if submission fails */}
+      {error && (
+        <div className="text-red-500 mt-2">
+          Error submitting review.fill all input.
+        </div>
+      )}
+
+      {/* Display success message if submission is successful */}
+      {isSuccess && (
+        <div className="text-green-500 mt-2">
+          Review submitted successfully!
+        </div>
+      )}
     </div>
   );
 };
