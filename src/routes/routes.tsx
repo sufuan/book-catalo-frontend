@@ -27,7 +27,7 @@ const routes = createBrowserRouter([
       },
 
       {
-        path: '/createbook',
+        path: '/add-new-book',
         element: (
           <PrivateRoute>
             <Createbook />,

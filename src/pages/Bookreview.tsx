@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import StarRating from '../components/ui/star-rating';
 import { useCreateReviewMutation } from '@/redux/api/apiSlice';
+import { useAppSelector } from '@/redux/hooks';
 
 const Bookreview = ({ bookId }) => {
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user } = useAppSelector((state) => state.user);
 
   const handleRatingChange = (selectedRating) => {
     setRating(selectedRating);
@@ -69,7 +72,7 @@ const Bookreview = ({ bookId }) => {
       <button
         onClick={handleSubmit}
         className={`${
-          isLoading || isSubmitting
+          isLoading || isSubmitting || !user.email
             ? 'bg-gray-500 cursor-not-allowed'
             : 'bg-blue-500'
         } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-800`}

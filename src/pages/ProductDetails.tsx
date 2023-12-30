@@ -5,10 +5,12 @@ import {
 } from '@/redux/api/apiSlice';
 import Bookreview from './Bookreview';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.user);
 
   const { data: book, isLoading } = useGetSingleBooksQuery(id);
   const [deletebookid, { isError, error, isSuccess }] =
@@ -89,11 +91,16 @@ export default function ProductDetails() {
         )}
 
         <div className="space-x-4 mt-4">
-          <Link to={`/update-book/${book?.data._id}`}>
-            <Button>Update Book</Button>
-          </Link>
+          {user.email ? (
+            <Link to={`/update-book/${book?.data._id}`}>
+              <Button disabled={!user.email}>Update Book</Button>
+            </Link>
+          ) : (
+            <Button disabled>Update Book</Button>
+          )}
           <Button
             onClick={handleDeleteButtonClick}
+            disabled={!user.email}
             className="bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-800"
           >
             Delete Book
