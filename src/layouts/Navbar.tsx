@@ -32,7 +32,7 @@ export default function Navbar() {
       <div className="h-full w-full bg-white/60">
         <div className="flex items-center justify-between w-full md:max-w-7xl h-full mx-auto ">
           <div>
-            <img className="h-8" src={logo} alt="log" />
+            <h1 className="text-2xl font-bold text-gray-800">Book House</h1>
           </div>
           <div>
             <ul className="flex items-center">
